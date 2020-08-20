@@ -27,7 +27,7 @@ public class InfomationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_infomation);
-        // determineLatLngFromAddress(this, "419 Phan Xích Long, Phường 3");
+        determineLatLngFromAddress(this, "419 Phan Xích Long, Phường 3");
         initComponents();
         loadData();
     }
@@ -41,26 +41,26 @@ public class InfomationActivity extends AppCompatActivity {
         }
     }
 //      Test find location by address -> success
-//    public LatLng determineLatLngFromAddress(Context appContext, String strAddress) {
-//        LatLng latLng = null;
-//        Geocoder geocoder = new Geocoder(appContext, Locale.getDefault());
-//        List<Address> geoResults = null;
-//
-//        try {
-//            geoResults = geocoder.getFromLocationName(strAddress, 10);
-//            while (geoResults.size()==0) {
-//                geoResults = geocoder.getFromLocationName(strAddress, 10);
-//            }
-//            if (geoResults.size()>0) {
-//                Address addr = geoResults.get(0);
-//                latLng = new LatLng(addr.getLatitude(),addr.getLongitude());
-//            }
-//        } catch (Exception e) {
-//            System.out.print(e.getMessage());
-//        }
-//
-//        return latLng; //LatLng value of address
-//    }
+    public LatLng determineLatLngFromAddress(Context appContext, String strAddress) {
+        LatLng latLng = null;
+        Geocoder geocoder = new Geocoder(appContext, Locale.getDefault());
+        List<Address> geoResults = null;
+
+        try {
+            geoResults = geocoder.getFromLocationName(strAddress, 10);
+            while (geoResults.size()==0) {
+                geoResults = geocoder.getFromLocationName(strAddress, 10);
+            }
+            if (geoResults.size()>0) {
+                Address addr = geoResults.get(0);
+                latLng = new LatLng(addr.getLatitude(),addr.getLongitude());
+            }
+        } catch (Exception e) {
+            System.out.print(e.getMessage());
+        }
+
+        return latLng; //LatLng value of address
+    }
 
     private void initComponents() {
         _edittextFullname = (EditText) findViewById(R.id.edittextFullname);
