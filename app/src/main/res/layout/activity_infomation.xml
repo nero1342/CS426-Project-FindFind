@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:text="Location"
             />
-        <AutoCompleteTextView
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/edittextLocation"
@@ -38,11 +38,36 @@
 
 
     </GridLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:layout_gravity="center"
+        android:text="Find location"
+        android:onClick="findLocationOnClick"
+        android:id="@+id/btnFindLocation"/>
+
     <LinearLayout android:id="@+id/autocomplete_fragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"
-        android:orientation="horizontal" />
+        android:orientation="vertical">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="description of location"
+            android:id="@+id/edittextDescLoction"
+            android:enabled="false"
+            />
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="9"
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            />
+    </LinearLayout>
     <GridLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
