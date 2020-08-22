@@ -38,14 +38,29 @@
 
 
     </GridLayout>
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.5"
-        android:layout_gravity="center"
-        android:text="Find location"
-        android:onClick="findLocationOnClick"
-        android:id="@+id/btnFindLocation"/>
+        android:layout_weight="0.5">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:layout_gravity="center"
+            android:text="Find location"
+            android:onClick="findLocationOnClick"
+            android:id="@+id/btnFindLocation"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:layout_gravity="center"
+            android:text="Choose this location"
+            android:onClick="chooseLocationOnClick"
+            android:id="@+id/btnChooseLocation"/>
+    </LinearLayout>
+
 
     <LinearLayout android:id="@+id/autocomplete_fragment"
         android:layout_width="match_parent"

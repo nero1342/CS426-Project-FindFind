@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, InfomationActivity.class);
                 intent.putExtra("user", _user);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE_EDIT_INFO);
 
             }
         });
