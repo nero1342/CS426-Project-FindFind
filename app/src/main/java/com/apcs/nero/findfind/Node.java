@@ -15,11 +15,13 @@ public class Node {
     LatLng _location;
     HashMap<String, ArrayList<LatLng>> _path;
     double _length;
+    double _time;
 
     public Node(String name, LatLng location) {
         _name = name;
         _location = location;
         _length = 0.0;
+        _time = 0.0;
         _path = new HashMap<>();
     }
 
@@ -35,6 +37,10 @@ public class Node {
 
     public void setLength(double length) { _length = length; }
 
+    public double getTime() { return _time; }
+
+    public void setTime(double time) { _time = time; }
+
     public void setPath(HashMap<String, ArrayList<LatLng>> path) { _path = path; }
 
     public ArrayList<Polyline> drawPath(GoogleMap mMap, ArrayList<Node> people, Node me) {
@@ -46,7 +52,7 @@ public class Node {
                     .width(10)
                     .geodesic(true);
             if (person.getName() == me.getName())
-                options.color(Color.BLUE);
+                options.color(0x9911AB22);
             Polyline line = mMap.addPolyline((options));
             lines.add(line);
         }

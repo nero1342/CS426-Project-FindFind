@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,12 +19,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -84,31 +79,31 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void loadData() {
-//        // Add people
-//        mPeople = new ArrayList<>();
-//        mPeople.add(new Node("Khoa", new LatLng(10.751088, 106.699583)));
-//        mPeople.add(new Node("Ro", new LatLng(10.799199, 106.685738)));
-//        mMe = mPeople.get(0);
-//
-//        // Add places
-//        mPlaces = new ArrayList<>();
-//        mPlaces.add(new Node("Vietphin Coffee", new LatLng(10.772867, 106.690587)));
-//        mPlaces.add(new Node("The Coffee House", new LatLng(10.771223, 106.681081)));
-//        mPlaces.add(new Node("Say Coffee", new LatLng(10.772551, 106.669397)));
-
-        Intent intent = getIntent();
-        ArrayList<Infomation> _people = (ArrayList) intent.getSerializableExtra("people");
-        ArrayList<Infomation> _location = (ArrayList) intent.getSerializableExtra("location");
-
+        // Add people
         mPeople = new ArrayList<>();
-        for (Infomation people : _people) {
-            mPeople.add(new Node(people.getName(), people.getLocationInfo().getLocation().toLatLng()));
-        }
+        mPeople.add(new Node("Khoa", new LatLng(10.751088, 106.699583)));
+        mPeople.add(new Node("Ro", new LatLng(10.799199, 106.685738)));
         mMe = mPeople.get(0);
+
+        // Add places
         mPlaces = new ArrayList<>();
-        for (Infomation place : _location) {
-            mPlaces.add(new Node(place.getName(), place.getLocationInfo().getLocation().toLatLng()));
-        }
+        mPlaces.add(new Node("Vietphin Coffee", new LatLng(10.772867, 106.690587)));
+        mPlaces.add(new Node("The Coffee House", new LatLng(10.771223, 106.681081)));
+        mPlaces.add(new Node("Say Coffee", new LatLng(10.772551, 106.669397)));
+
+//        Intent intent = getIntent();
+//        ArrayList<Infomation> _people = (ArrayList) intent.getSerializableExtra("people");
+//        ArrayList<Infomation> _location = (ArrayList) intent.getSerializableExtra("location");
+//
+//        mPeople = new ArrayList<>();
+//        for (Infomation people : _people) {
+//            mPeople.add(new Node(people.getName(), people.getLocationInfo().getLocation().toLatLng()));
+//        }
+//        mMe = mPeople.get(0);
+//        mPlaces = new ArrayList<>();
+//        for (Infomation place : _location) {
+//            mPlaces.add(new Node(place.getName(), place.getLocationInfo().getLocation().toLatLng()));
+//        }
         numTaskRemaining = mPlaces.size();
     }
 
@@ -169,6 +164,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             try {
                 HashMap<String, ArrayList<LatLng>> path = new HashMap<>();
                 double length = 0.0;
+                double time = 0.0;
 
                 String ACCESS_TOKEN = "pk.eyJ1Ijoia2hvYTMxMDEiLCJhIjoiY2tlMHhvMGU1MDd2ajJzbXc3Y3cwNTR0NCJ9.EGFqfMgYQhqgA1WM4MqSDw";
                 String SOURCE_API = "https://api.mapbox.com/directions/v5/mapbox/cycling/";
@@ -207,10 +203,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     String JSONString = builder.toString();
                     JSONObject response = new JSONObject(JSONString);
+                    JSONObject route = response.getJSONArray("routes").getJSONObject(0);
 
-                    JSONObject geometry = response.getJSONArray("routes").getJSONObject(0).getJSONObject("geometry");
-                    JSONArray jsonCoordinates = geometry.getJSONArray("coordinates");
+                    JSONArray jsonCoordinates = route.getJSONObject("geometry").getJSONArray("coordinates");
 
+                    // Get coordinates
                     for (int i = 0; i < jsonCoordinates.length(); i++) {
                         JSONArray singleCoordinate = jsonCoordinates.getJSONArray(i);
                         coordinates.add(new LatLng(
@@ -220,20 +217,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
 
                     // Compute the total length of the path
-                    LatLng pointLast = coordinates.get(0);
-                    for (int i = 1; i < coordinates.size(); i++) {
-                        LatLng point = coordinates.get(i);
-                        double x1 = point.latitude;
-                        double y1 = point.longitude;
-                        double x2 = pointLast.latitude;
-                        double y2 = pointLast.longitude;
+                    //LatLng pointLast = coordinates.get(0);
+                    //for (int i = 1; i < coordinates.size(); i++) {
+                    //    LatLng point = coordinates.get(i);
+                    //    double x1 = point.latitude;
+                    //    double y1 = point.longitude;
+                    //    double x2 = pointLast.latitude;
+                    //    double y2 = pointLast.longitude;
+                    //
+                    //    length += Math.hypot(x2 - x1, y2 - y1);
+                    //    pointLast = point;
+                    //}
 
-                        length += Math.hypot(x2 - x1, y2 - y1);
-                        pointLast = point;
-                    }
+                    // Get time and length
+                    time += route.getDouble("duration");
+                    length += route.getDouble("distance");
+
                     path.put(person.getName(), coordinates);
                 }
                 _place.get().setLength(length);
+                _place.get().setTime(time);
                 return path;
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
@@ -269,7 +272,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Disable Map Toolbar:
         mMap.getUiSettings().setMapToolbarEnabled(false);
 
-        mPath = mPlaces.get(mMinIndex).drawPath(mMap, mPeople, mMe);
+        // Draw best path and display infomation
+        Node bestPlace = mPlaces.get(mMinIndex);
+        mPath = bestPlace.drawPath(mMap, mPeople, mMe);
+        TextView viewBest = (TextView) findViewById(R.id.textView_bestDistance);
+        viewBest.setText("Best: " + convertDistance(bestPlace.getLength()) + " (" + convertTime(bestPlace.getTime()) + ")");
+        displayInfo(bestPlace);
+
         displayMarkers();
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -277,10 +286,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public boolean onMarkerClick(Marker marker) {
                 Node place = (Node) marker.getTag();
                 if (place != null) {
-                    for (Polyline line : mPath)
-                        //  Redraw the path to the new marker
-                        line.remove();
-                    mPath = place.drawPath(mMap, mPeople, mMe);
+                    reDrawPath(place);
                 }
                 return false;
             }
@@ -288,18 +294,37 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    public String convertDistance(double distance) {
+        return String.valueOf(distance) + " m";
+    }
+
+    public String convertTime(double time) {
+        return String.valueOf(time) + " s";
+    }
+
+    public void displayInfo(Node place) {
+        mPath = place.drawPath(mMap, mPeople, mMe);
+        TextView viewBest = (TextView) findViewById(R.id.textView_curDistance);
+        viewBest.setText(convertDistance(place.getLength()) + " (" + convertTime(place.getTime()) + ")");
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_star:
-                for (Polyline line : mPath)
-                    line.remove();
-                mPath = mPlaces.get(mMinIndex).drawPath(mMap, mPeople, mMe);
-                moveCamera();
+                reDrawPath(mPlaces.get(mMinIndex));
         }
 
         // User didn't trigger a refresh, let the superclass handle this action
         return super.onOptionsItemSelected(item);
+    }
+
+    public void reDrawPath(Node place) {
+        for (Polyline line : mPath)
+            //  Redraw the path to the new marker
+            line.remove();
+        mPath = place.drawPath(mMap, mPeople, mMe);
+        displayInfo(place);
     }
 
     public void displayMarkers() {
