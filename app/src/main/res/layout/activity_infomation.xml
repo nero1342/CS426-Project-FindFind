@@ -16,20 +16,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fullname"
+            android:text="Name"
             />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/edittextFullname"
-            android:hint="Type fullname here"
+            android:id="@+id/edittextName"
+            android:hint="Type full name here"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Location"
             />
-        <AutoCompleteTextView
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/edittextLocation"
@@ -38,16 +38,56 @@
 
 
     </GridLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:layout_gravity="center"
+            android:text="Find location"
+            android:onClick="findLocationOnClick"
+            android:id="@+id/btnFindLocation"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:layout_gravity="center"
+            android:text="Choose this location"
+            android:onClick="chooseLocationOnClick"
+            android:id="@+id/btnChooseLocation"/>
+    </LinearLayout>
+
+
     <LinearLayout android:id="@+id/autocomplete_fragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"
-        android:orientation="horizontal" />
+        android:orientation="vertical">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="description of location"
+            android:id="@+id/edittextDescLoction"
+            android:enabled="false"
+            />
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="9"
+            android:id="@+id/map_Infomation"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            />
+    </LinearLayout>
     <GridLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:columnCount="2"
-        android:layout_weight="1">
+        android:layout_weight="0.7">
         <Button
             android:layout_width="0dp"
             android:layout_height="match_parent"

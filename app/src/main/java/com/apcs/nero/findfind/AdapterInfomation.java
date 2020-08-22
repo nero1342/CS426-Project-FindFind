@@ -36,8 +36,9 @@ public class AdapterInfomation extends ArrayAdapter<Infomation> {
         TextView textView_fullname = (TextView) convertView.findViewById(R.id.textView_fullname);
         TextView textView_location = (TextView) convertView.findViewById(R.id.textView_location);
 
-        textView_fullname.setText(infomation.getFullname());
-        textView_location.setText(infomation.getPosition());
+        textView_fullname.setText(infomation.getName());
+        textView_location.setText(infomation.getAddress());
         return convertView;
     }
+
 }

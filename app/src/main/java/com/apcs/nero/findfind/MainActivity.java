@@ -9,11 +9,12 @@ import android.icu.text.IDNA;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_EDIT_INFO = 0x9345;
-    Button _btnCreateRoom, _btnJoinRoom, _btnEditInfo;
+    ImageButton _btnCreateRoom, _btnJoinRoom, _btnEditInfo;
     Infomation _user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,9 +25,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initComponents() {
-        _user = new Infomation("Nguyen E Ro", "419 Phan Xich Long");
+        _user = new Infomation("Nguyen E Ro", new LocationInfo(new LatLong(1, 1), "419 Phan Xich Long"));
         // Create Room
-        _btnCreateRoom = (Button) findViewById(R.id.btnCreateRoom);
+        _btnCreateRoom = (ImageButton) findViewById(R.id.btnCreateRoom);
         _btnCreateRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -35,15 +36,23 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        // Join Room
+        _btnJoinRoom = (ImageButton) findViewById(R.id.btnJoinRoom);
+        _btnJoinRoom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "Coming soon...", Toast.LENGTH_LONG).show();
+            }
+        });
+
         // Edit Info
-        _btnEditInfo = (Button) findViewById(R.id.btnEditInfo);
+        _btnEditInfo = (ImageButton) findViewById(R.id.btnEditInfo);
         _btnEditInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, InfomationActivity.class);
                 intent.putExtra("user", _user);
-                startActivity(intent);
-
+                startActivityForResult(intent, REQUEST_CODE_EDIT_INFO);
             }
         });
     }

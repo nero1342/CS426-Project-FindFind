@@ -3,27 +3,34 @@ package com.apcs.nero.findfind;
 import java.io.Serializable;
 
 public class Infomation implements Serializable {
-    String _fullname;
-    String _location;
+    String _name;
+    LocationInfo _locationInfo;
 
-    public Infomation(String fullname, String location) {
-        this._fullname = fullname;
-        this._location = location;
+    public Infomation() {
     }
 
-    public String getFullname() {
-        return _fullname;
+    public Infomation(String name, LocationInfo locationInfo) {
+        this._name = name;
+        this._locationInfo = locationInfo;
     }
 
-    public String getPosition() {
-        return _location;
+    public String getName() {
+        return _name;
     }
 
-    public void setFullname(String fullname) {
-        this._fullname = fullname;
+    public void setName(String name) {
+        this._name = name;
     }
 
-    public void setPosition(String location) {
-        this._location = location;
+    public LocationInfo getLocationInfo() {
+        return _locationInfo;
+    }
+
+    public void setLocationInfo(LocationInfo locationInfo) {
+        this._locationInfo = locationInfo;
+    }
+
+    public String getAddress() {
+        return _locationInfo.getDesc();
     }
 }
