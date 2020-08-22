@@ -51,6 +51,15 @@ public class RoomActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_CODE_ADD_ROOMMATE);
             }
         });
+
+        Button btnFind = (Button) findViewById(R.id.btnFindBestLocation);
+        btnFind.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RoomActivity.this, MapsActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
