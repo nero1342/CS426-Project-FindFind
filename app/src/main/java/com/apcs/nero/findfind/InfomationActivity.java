@@ -28,7 +28,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -36,13 +35,15 @@ import java.util.List;
 import java.util.Locale;
 
 public class InfomationActivity extends FragmentActivity implements OnMapReadyCallback {
-    EditText _edittextFullname;
+    EditText _edittextName;
     Button _btnSave, _btnCancel;
     AppCompatAutoCompleteTextView _edittextLocation;
-
+    Infomation _user = null;
+    LocationInfo _locationInfo = null;
     private GoogleMap mMap;
     Marker mMarker = null;
     private LocationManager mLocationManager = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +63,7 @@ public class InfomationActivity extends FragmentActivity implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         Location currentLocation = getCurrentLocation();
-        LocationInfo locationInfo = determineLocationFromLatLng(getApplicationContext(), new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
+        LocationInfo locationInfo = determineLocationFromLatLong(getApplicationContext(), new LatLong(currentLocation.getLatitude(), currentLocation.getLongitude()));
         EditText editText = (EditText) findViewById(R.id.edittextDescLoction);
         editText.setText(locationInfo.getDesc());
         displayMarker(locationInfo);
@@ -70,54 +71,14 @@ public class InfomationActivity extends FragmentActivity implements OnMapReadyCa
 
     private void loadData() {
         Intent intent = getIntent();
+        _user = new Infomation();
         if (intent.getExtras() != null) {
-            Infomation infomation = (Infomation) intent.getSerializableExtra("user");
-            _edittextFullname.setText(infomation.getFullname());
-            _edittextLocation.setText(infomation.getPosition());
+            _user = (Infomation) intent.getSerializableExtra("user");
+            _edittextName.setText(_user.getName());
+            _edittextLocation.setText(_user.getAddress());
         }
     }
-    public LocationInfo determineLocationFromAddress(Context appContext, String strAddress) {
-        String desc = null;
-        LatLng location = null;
-        LocationInfo locationInfo = null;
 
-        Geocoder geocoder = new Geocoder(appContext, Locale.getDefault());
-        List<Address> geoResults = null;
-
-        try {
-            geoResults = geocoder.getFromLocationName(strAddress, 1);
-            if (geoResults.size()>0) {
-                Address addr = geoResults.get(0);
-                location = new LatLng(addr.getLatitude(), addr.getLongitude());
-                desc = addr.getAddressLine(0);
-                locationInfo = new LocationInfo(location, desc);
-            }
-        } catch (Exception e) {
-            System.out.print(e.getMessage());
-        }
-        return locationInfo; //LatLng value of address
-    }
-
-    public LocationInfo determineLocationFromLatLng(Context appContext, LatLng location) {
-        String desc = null;
-        LocationInfo locationInfo = null;
-
-        Geocoder geocoder = new Geocoder(appContext, Locale.getDefault());
-        List<Address> geoResults = null;
-
-        try {
-            geoResults = geocoder.getFromLocation(location.latitude, location.longitude, 1);
-            if (geoResults.size()>0) {
-                Address addr = geoResults.get(0);
-                location = new LatLng(addr.getLatitude(), addr.getLongitude());
-                desc = addr.getAddressLine(0);
-                locationInfo = new LocationInfo(location, desc);
-            }
-        } catch (Exception e) {
-            System.out.print(e.getMessage());
-        }
-        return locationInfo; //LatLng value of address
-    }
 
     private void initComponents() {
 
@@ -130,16 +91,17 @@ public class InfomationActivity extends FragmentActivity implements OnMapReadyCa
                     LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
         }
 
-        _edittextFullname = (EditText) findViewById(R.id.edittextFullname);
+        _edittextName = (EditText) findViewById(R.id.edittextName);
         _edittextLocation = (AppCompatAutoCompleteTextView) findViewById(R.id.edittextLocation);
         //
         _btnSave = (Button) findViewById(R.id.btnSaveAndClose);
+
         _btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Infomation infomation = new Infomation(_edittextFullname.getText().toString(), _edittextLocation.getText().toString());
+                _user = new Infomation(_edittextName.getText().toString(), _locationInfo);
                 Intent intent = new Intent();
-                intent.putExtra("user", infomation);
+                intent.putExtra("user", _user);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
             }
@@ -163,11 +125,11 @@ public class InfomationActivity extends FragmentActivity implements OnMapReadyCa
 
     public void findLocationOnClick(View view) {
         String address = _edittextLocation.getText().toString();
-        LocationInfo locationInfo = determineLocationFromAddress(getApplicationContext(), address);
-        if (locationInfo != null) {
+        _locationInfo = determineLocationFromAddress(getApplicationContext(), address);
+        if (_locationInfo != null) {
             EditText editText = (EditText) findViewById(R.id.edittextDescLoction);
-            editText.setText(locationInfo.getDesc());
-            displayMarker(locationInfo);
+            editText.setText(_locationInfo.getDesc());
+            displayMarker(_locationInfo);
         }
         else {
             Toast.makeText(this, "Fail to find location",Toast.LENGTH_LONG);
@@ -177,12 +139,12 @@ public class InfomationActivity extends FragmentActivity implements OnMapReadyCa
     private void displayMarker(LocationInfo locationInfo) {
         if (mMarker != null) mMarker.remove();
         mMarker = mMap.addMarker(new MarkerOptions()
-                .position(locationInfo.getLocation())
+                .position(locationInfo.getLocation().toLatLng())
                 .title(locationInfo.getDesc())
         );
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(locationInfo.getLocation())
+                .target(locationInfo.getLocation().toLatLng())
                 .zoom(15)
                 .bearing(90)
                 .tilt(30)
@@ -227,7 +189,51 @@ public class InfomationActivity extends FragmentActivity implements OnMapReadyCa
     }
 
     public void chooseLocationOnClick(View view) {
+        _user.setLocationInfo(_locationInfo);
         EditText editText = (EditText) findViewById(R.id.edittextDescLoction);
         _edittextLocation.setText(editText.getText());
+    }
+
+    public LocationInfo determineLocationFromAddress(Context appContext, String strAddress) {
+        String desc = null;
+        LatLong location = null;
+        LocationInfo locationInfo = null;
+
+        Geocoder geocoder = new Geocoder(appContext, Locale.getDefault());
+        List<Address> geoResults = null;
+
+        try {
+            geoResults = geocoder.getFromLocationName(strAddress, 1);
+            if (geoResults.size()>0) {
+                Address addr = geoResults.get(0);
+                location = new LatLong(addr.getLatitude(), addr.getLongitude());
+                desc = addr.getAddressLine(0);
+                locationInfo = new LocationInfo(location, desc);
+            }
+        } catch (Exception e) {
+            System.out.print(e.getMessage());
+        }
+        return locationInfo; //LatLong value of address
+    }
+
+    public LocationInfo determineLocationFromLatLong(Context appContext, LatLong location) {
+        String desc = null;
+        LocationInfo locationInfo = null;
+
+        Geocoder geocoder = new Geocoder(appContext, Locale.getDefault());
+        List<Address> geoResults = null;
+
+        try {
+            geoResults = geocoder.getFromLocation(location.latitude, location.longitude, 1);
+            if (geoResults.size()>0) {
+                Address addr = geoResults.get(0);
+                location = new LatLong(addr.getLatitude(), addr.getLongitude());
+                desc = addr.getAddressLine(0);
+                locationInfo = new LocationInfo(location, desc);
+            }
+        } catch (Exception e) {
+            System.out.print(e.getMessage());
+        }
+        return locationInfo; //LatLong value of address
     }
 }

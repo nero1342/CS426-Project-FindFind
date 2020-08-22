@@ -2,18 +2,18 @@ package com.apcs.nero.findfind;
 
 import android.location.Location;
 
-import com.google.android.gms.maps.model.LatLng;
+import java.io.Serializable;
 
-public class LocationInfo {
-    LatLng _location;
+public class LocationInfo implements Serializable {
+    LatLong _location;
     String _desc;
 
-    public LocationInfo(LatLng location, String desc) {
+    public LocationInfo(LatLong location, String desc) {
         this._desc = desc;
         this._location = location;
     }
 
-    public LatLng getLocation() {
+    public LatLong getLocation() {
         return _location;
     }
 
@@ -21,7 +21,7 @@ public class LocationInfo {
         return _desc;
     }
 
-    public void setLocation(LatLng location) {
+    public void setLocation(LatLong location) {
         this._location = location;
     }
 

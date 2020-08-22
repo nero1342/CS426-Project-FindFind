@@ -4,7 +4,11 @@
 
     To get one, follow this link, follow the directions and press "Create" at the end:
 
+<<<<<<< HEAD
     https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=45:50:69:C6:37:DF:72:A0:D3:AA:F3:CD:D7:E0:16:1A:F1:C9:B1:99%3Bcom.apcs.nero.findfind
+=======
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=0E:F7:70:FA:94:8A:D8:E1:66:DF:6B:B6:7B:7D:DF:F7:57:40:78:C1%3Bcom.apcs.nero.findfind
+>>>>>>> f0a23978116c036f7d20bbfa990bb44d698b20fc
 
     You can also add your credentials to an existing key, using these values:
 
@@ -12,7 +16,11 @@
     com.apcs.nero.findfind
 
     SHA-1 certificate fingerprint:
+<<<<<<< HEAD
     45:50:69:C6:37:DF:72:A0:D3:AA:F3:CD:D7:E0:16:1A:F1:C9:B1:99
+=======
+    0E:F7:70:FA:94:8A:D8:E1:66:DF:6B:B6:7B:7D:DF:F7:57:40:78:C1
+>>>>>>> f0a23978116c036f7d20bbfa990bb44d698b20fc
 
     Alternatively, follow the directions here:
     https://developers.google.com/maps/documentation/android/start#get-key
