@@ -68,7 +68,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
     }
 
     @Override
@@ -303,7 +302,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void displayInfo(Node place) {
-        mPath = place.drawPath(mMap, mPeople, mMe);
+        //mPath = place.drawPath(mMap, mPeople, mMe);
         TextView viewBest = (TextView) findViewById(R.id.textView_curDistance);
         viewBest.setText(convertDistance(place.getLength()) + " (" + convertTime(place.getTime()) + ")");
     }

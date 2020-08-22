@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnCreateRoom"
-            android:src="@drawable/create_room"
+            android:src="@drawable/friends"
             android:layout_columnWeight="1"
             />
 
