@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/edittextFullname"
-            android:hint="Type fullname here"
+            android:hint="Type full name here"
             />
         <TextView
             android:layout_width="wrap_content"
