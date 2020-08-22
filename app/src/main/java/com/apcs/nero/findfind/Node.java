@@ -1,25 +1,12 @@
 package com.apcs.nero.findfind;
 
-import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
+import android.graphics.Color;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -50,14 +37,17 @@ public class Node {
 
     public void setPath(HashMap<String, ArrayList<LatLng>> path) { _path = path; }
 
-    public ArrayList<Polyline> drawPath(GoogleMap mMap, ArrayList<Node> people) {
+    public ArrayList<Polyline> drawPath(GoogleMap mMap, ArrayList<Node> people, Node me) {
         ArrayList<Polyline> lines = new ArrayList<>();
 
         for (Node person : people) {
-            Polyline line = mMap.addPolyline(new PolylineOptions()
+            PolylineOptions options = new PolylineOptions()
                     .addAll(_path.get(person.getName()))
                     .width(10)
-                    .geodesic(true));
+                    .geodesic(true);
+            if (person.getName() == me.getName())
+                options.color(Color.BLUE);
+            Polyline line = mMap.addPolyline((options));
             lines.add(line);
         }
         return lines;

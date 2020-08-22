@@ -85,6 +85,8 @@ public class RoomActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(RoomActivity.this, MapsActivity.class);
+                intent.putExtra("people",_roommates);
+                intent.putExtra("location", _locations);
                 startActivityForResult(intent, REQUEST_CODE_FIND_BEST_LOCATION);
             }
         });

@@ -1,14 +1,22 @@
 package com.apcs.nero.findfind;
 
-import androidx.fragment.app.FragmentActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Toast;
+
+import androidx.appcompat.widget.Toolbar;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -42,40 +50,65 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private ArrayList<Node> mPeople;
     private ArrayList<Node> mPlaces;
+    private Node mMe;
     private int mMinIndex;
     private ArrayList<Polyline> mPath;
     private ArrayList<Marker> mMarkers;
     int numTaskRemaining = 0;
+    private Marker mMarkerBest;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        loadData();
-        initComponents();
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.map_bar, menu);
+        return true;
     }
 
     public void loadData() {
-        //  Add people
+//        // Add people
+//        mPeople = new ArrayList<>();
+//        mPeople.add(new Node("Khoa", new LatLng(10.751088, 106.699583)));
+//        mPeople.add(new Node("Ro", new LatLng(10.799199, 106.685738)));
+//        mMe = mPeople.get(0);
+//
+//        // Add places
+//        mPlaces = new ArrayList<>();
+//        mPlaces.add(new Node("Vietphin Coffee", new LatLng(10.772867, 106.690587)));
+//        mPlaces.add(new Node("The Coffee House", new LatLng(10.771223, 106.681081)));
+//        mPlaces.add(new Node("Say Coffee", new LatLng(10.772551, 106.669397)));
+
+        Intent intent = getIntent();
+        ArrayList<Infomation> _people = (ArrayList) intent.getSerializableExtra("people");
+        ArrayList<Infomation> _location = (ArrayList) intent.getSerializableExtra("location");
+
         mPeople = new ArrayList<>();
-        mPeople.add(new Node("Khoa", new LatLng(10.751088, 106.699583)));
-        mPeople.add(new Node("Ro", new LatLng(10.799199, 106.685738)));
-
-        // Add places
+        for (Infomation people : _people) {
+            mPeople.add(new Node(people.getName(), people.getLocationInfo().getLocation().toLatLng()));
+        }
+        mMe = mPeople.get(0);
         mPlaces = new ArrayList<>();
-        mPlaces.add(new Node("Vietphin Coffee", new LatLng(10.772867, 106.690587)));
-        mPlaces.add(new Node("The Coffee House", new LatLng(10.771223, 106.681081)));
-        mPlaces.add(new Node("Say Coffee", new LatLng(10.772551, 106.669397)));
-
+        for (Infomation place : _location) {
+            mPlaces.add(new Node(place.getName(), place.getLocationInfo().getLocation().toLatLng()));
+        }
         numTaskRemaining = mPlaces.size();
     }
 
@@ -92,8 +125,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            //if (place.getLength() < mPlaces.get(mMinIndex).getLength())
-            //    mMinIndex = i;
+            if (place.getLength() < mPlaces.get(mMinIndex).getLength())
+                mMinIndex = i;
         }
 
 
@@ -164,7 +197,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     // Read JSON
                     String line;
-                    while((line = reader.readLine()) != null) {
+                    while ((line = reader.readLine()) != null) {
                         builder.append(line);
                         builder.append('\n');
                     }
@@ -195,7 +228,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         double x2 = pointLast.latitude;
                         double y2 = pointLast.longitude;
 
-                        length += Math.hypot(x2-x1, y2-y1);
+                        length += Math.hypot(x2 - x1, y2 - y1);
                         pointLast = point;
                     }
                     path.put(person.getName(), coordinates);
@@ -211,15 +244,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         @Override
         protected void onPostExecute(HashMap<String, ArrayList<LatLng>> path) {
             super.onPostExecute(path);
-            --numTaskRemaining;
             if (_dialog.isShowing()) {
                 _dialog.dismiss();
             }
             //_place.get().setPath(path);
         }
-
     }
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -231,50 +261,83 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        loadData();
+        initComponents();
         mMap = googleMap;
-        while (numTaskRemaining > 0);
+        //while (numTaskRemaining > 0);
         mMarkers = new ArrayList<>();
-        mPath = mPlaces.get(mMinIndex).drawPath(mMap, mPeople);
+        //Disable Map Toolbar:
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+
+        mPath = mPlaces.get(mMinIndex).drawPath(mMap, mPeople, mMe);
         displayMarkers();
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                for (Polyline line : mPath)
-                    //  Redraw the path to the new marker
-                    line.remove();
-                mPath = mPlaces.get(0).drawPath(mMap, mPeople);
+                Node place = (Node) marker.getTag();
+                if (place != null) {
+                    for (Polyline line : mPath)
+                        //  Redraw the path to the new marker
+                        line.remove();
+                    mPath = place.drawPath(mMap, mPeople, mMe);
+                }
                 return false;
             }
         });
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_star:
+                for (Polyline line : mPath)
+                    line.remove();
+                mPath = mPlaces.get(mMinIndex).drawPath(mMap, mPeople, mMe);
+                moveCamera();
+        }
+
+        // User didn't trigger a refresh, let the superclass handle this action
+        return super.onOptionsItemSelected(item);
+    }
+
     public void displayMarkers() {
         //  Display places
-        for (Node place : mPlaces) {
-            mMarkers.add(mMap.addMarker(new MarkerOptions()
-                    .position(place.getLocation())
-                    .title(place.getName())
-            ));
+        for (int i = 0; i < mPlaces.size(); i++) {
+            Node place = mPlaces.get(i);
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                            .position(place.getLocation())
+                            .title(place.getName()));
+            marker.setTag(place);
+            mMarkers.add(marker);
+
+            // Mark the best place
+            if (i == mMinIndex)
+                mMarkerBest = marker;
         }
 
         // Display people
         for (Node person : mPeople) {
-            mMarkers.add(mMap.addMarker(new MarkerOptions()
+            Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(person.getLocation())
-                    .title(person.getName())
-            ));
+                    .title(person.getName()));
+            mMarkers.add(marker);
         }
 
+        moveCamera();
+    }
+
+    public void moveCamera() {
         // Move camera to the optimal place
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(mPlaces.get(mMinIndex).getLocation())     // Sets the center of the map to Mountain View
+                .target(((Node) mMarkerBest.getTag()).getLocation())     // Sets the center of the map to Mountain View
                 .zoom(15)                           // Sets the zoom
                 .bearing(90)                        // Sets the orientation of the camera to east
                 .tilt(30)                           // Sets the tilt of the camera to 30 degrees
                 .build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        mMarkerBest.showInfoWindow();
     }
 }
