@@ -63,10 +63,10 @@ public class InfomationActivity extends FragmentActivity implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         Location currentLocation = getCurrentLocation();
-        LocationInfo locationInfo = determineLocationFromLatLong(getApplicationContext(), new LatLong(currentLocation.getLatitude(), currentLocation.getLongitude()));
+        _locationInfo = determineLocationFromLatLong(getApplicationContext(), new LatLong(currentLocation.getLatitude(), currentLocation.getLongitude()));
         EditText editText = (EditText) findViewById(R.id.edittextDescLoction);
-        editText.setText(locationInfo.getDesc());
-        displayMarker(locationInfo);
+        editText.setText(_locationInfo.getDesc());
+        displayMarker(_locationInfo);
     }
 
     private void loadData() {
