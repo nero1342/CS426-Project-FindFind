@@ -100,6 +100,13 @@ public class InfomationActivity extends FragmentActivity implements OnMapReadyCa
             @Override
             public void onClick(View v) {
                 _user = new Infomation(_edittextName.getText().toString(), _locationInfo);
+                if (!_edittextLocation.getText().toString().equals(_locationInfo.getDesc())) {
+                    String a = _edittextLocation.getText().toString();
+                    String b = _locationInfo.getDesc();
+                    boolean c = (a == b);
+                    Toast.makeText(getApplicationContext(), "Location and Real location must be the same", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 Intent intent = new Intent();
                 intent.putExtra("user", _user);
                 setResult(Activity.RESULT_OK, intent);
