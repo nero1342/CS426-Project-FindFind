@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initComponents() {
-        _user = new Infomation("Nguyen E Ro", new LocationInfo(new LatLong(1, 1), "419 Phan Xich Long"));
+        _user = new Infomation("Nguyen E Ro", new LocationInfo(new LatLong(10.8029884,106.679072), "419 Phan Xich Long, Phuong 3, Phu Nhuan, HCM"));
         // Create Room
         _btnCreateRoom = (ImageButton) findViewById(R.id.btnCreateRoom);
         _btnCreateRoom.setOnClickListener(new View.OnClickListener() {
@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, InfomationActivity.class);
                 intent.putExtra("user", _user);
+                intent.putExtra("title","Edit Infomation");
                 startActivityForResult(intent, REQUEST_CODE_EDIT_INFO);
             }
         });
