@@ -68,6 +68,7 @@ public class RoomActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(RoomActivity.this, InfomationActivity.class);
+                intent.putExtra("title", "Add New Roommate");
                 startActivityForResult(intent, REQUEST_CODE_ADD_ROOMMATE);
             }
         });
@@ -77,6 +78,7 @@ public class RoomActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(RoomActivity.this, InfomationActivity.class);
+                intent.putExtra("title", "Add New Location");
                 startActivityForResult(intent, REQUEST_CODE_ADD_LOCATION);
             }
         });

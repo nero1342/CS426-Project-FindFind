@@ -24,7 +24,7 @@
             android:layout_columnWeight="3"
             android:layout_height="wrap_content"
             android:id="@+id/edittextName"
-            android:hint="Type full name here"
+            android:hint="Type name here"
             />
         <TextView
             android:layout_width="0dp"

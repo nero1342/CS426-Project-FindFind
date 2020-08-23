@@ -15,6 +15,9 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -34,7 +37,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.List;
 import java.util.Locale;
 
-public class InfomationActivity extends FragmentActivity implements OnMapReadyCallback {
+public class InfomationActivity extends AppCompatActivity implements OnMapReadyCallback {
     EditText _edittextName;
     Button _btnSave, _btnCancel;
     AppCompatAutoCompleteTextView _edittextLocation;
@@ -54,10 +57,10 @@ public class InfomationActivity extends FragmentActivity implements OnMapReadyCa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_Infomation);
         mapFragment.getMapAsync(this);
-
         initComponents();
         loadData();
     }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -72,10 +75,16 @@ public class InfomationActivity extends FragmentActivity implements OnMapReadyCa
     private void loadData() {
         Intent intent = getIntent();
         _user = new Infomation();
-        if (intent.getExtras() != null) {
+        try {
             _user = (Infomation) intent.getSerializableExtra("user");
             _edittextName.setText(_user.getName());
             _edittextLocation.setText(_user.getAddress());
+        } catch (Exception e) {
+        }
+        try {
+            getSupportActionBar().setTitle(intent.getStringExtra("title"));
+        } catch (Exception e) {
+
         }
     }
 
@@ -139,7 +148,7 @@ public class InfomationActivity extends FragmentActivity implements OnMapReadyCa
             displayMarker(_locationInfo);
         }
         else {
-            Toast.makeText(this, "Fail to find location",Toast.LENGTH_LONG);
+            Toast.makeText(this, "Fail to find location",Toast.LENGTH_LONG).show();
         }
     }
 
