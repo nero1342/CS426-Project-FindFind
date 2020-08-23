@@ -36,9 +36,12 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
-        <activity android:name=".RoomActivity" />
-        <activity android:name=".InfomationActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".RoomActivity"
+            android:configChanges="orientation|screenSize"/>
+        <activity android:name=".InfomationActivity"
+            android:configChanges="orientation|screenSize"/>
+        <activity android:name=".MainActivity"
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -11,6 +11,7 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -62,7 +63,7 @@ public class RoomActivity extends AppCompatActivity {
         _listviewLocations.setAdapter(_adapterLocations);
 
         _listviewLocations.setOnItemClickListener(remove_when_click);
-        Button btnAddRoommate = (Button) findViewById(R.id.btnAddRoommate);
+        ImageButton btnAddRoommate = (ImageButton) findViewById(R.id.btnAddRoommate);
         btnAddRoommate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,7 +72,7 @@ public class RoomActivity extends AppCompatActivity {
             }
         });
 
-        Button btnAddLocation = (Button) findViewById(R.id.btnAddLocation);
+        ImageButton btnAddLocation = (ImageButton) findViewById(R.id.btnAddLocation);
         btnAddLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
