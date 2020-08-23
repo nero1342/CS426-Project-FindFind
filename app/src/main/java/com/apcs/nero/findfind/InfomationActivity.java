@@ -15,6 +15,8 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -39,13 +41,13 @@ import java.util.Locale;
 
 public class InfomationActivity extends AppCompatActivity implements OnMapReadyCallback {
     EditText _edittextName;
-    Button _btnSave, _btnCancel;
     AppCompatAutoCompleteTextView _edittextLocation;
     Infomation _user = null;
     LocationInfo _locationInfo = null;
     private GoogleMap mMap;
     Marker mMarker = null;
     private LocationManager mLocationManager = null;
+    private Button _btnFindLocation, _btnSave, _btnCancel;;
 
 
     @Override
@@ -74,7 +76,7 @@ public class InfomationActivity extends AppCompatActivity implements OnMapReadyC
 
     private void loadData() {
         Intent intent = getIntent();
-        _user = new Infomation();
+
         try {
             _user = (Infomation) intent.getSerializableExtra("user");
             _edittextName.setText(_user.getName());
@@ -86,11 +88,10 @@ public class InfomationActivity extends AppCompatActivity implements OnMapReadyC
         } catch (Exception e) {
 
         }
+        if (_user == null) _user = new Infomation();
     }
 
-
     private void initComponents() {
-
         mLocationManager = (LocationManager)
                 getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new MyLocationListener();
@@ -99,12 +100,34 @@ public class InfomationActivity extends AppCompatActivity implements OnMapReadyC
             mLocationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
         }
+        _btnFindLocation = (Button)findViewById(R.id.btnFindLocation);
 
         _edittextName = (EditText) findViewById(R.id.edittextName);
         _edittextLocation = (AppCompatAutoCompleteTextView) findViewById(R.id.edittextLocation);
+        _edittextLocation.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String st = s.toString();
+                if (st.isEmpty()) {
+                    _btnFindLocation.setText("Find current location");
+                }
+                else {
+                    _btnFindLocation.setText("Find location");
+                }
+            }
+        });
         //
         _btnSave = (Button) findViewById(R.id.btnSaveAndClose);
-
         _btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,7 +164,10 @@ public class InfomationActivity extends AppCompatActivity implements OnMapReadyC
 
     public void findLocationOnClick(View view) {
         String address = _edittextLocation.getText().toString();
-        _locationInfo = determineLocationFromAddress(getApplicationContext(), address);
+        if (address.isEmpty()) {
+            Location currentLocation = getCurrentLocation();
+            _locationInfo = determineLocationFromLatLong(getApplicationContext(), new LatLong(currentLocation.getLatitude(), currentLocation.getLongitude()));
+        } else _locationInfo = determineLocationFromAddress(getApplicationContext(), address);
         if (_locationInfo != null) {
             EditText editText = (EditText) findViewById(R.id.edittextDescLoction);
             editText.setText(_locationInfo.getDesc());

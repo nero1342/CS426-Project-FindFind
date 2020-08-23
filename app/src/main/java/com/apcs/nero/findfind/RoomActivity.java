@@ -47,10 +47,22 @@ public class RoomActivity extends AppCompatActivity {
         _adapterLocations.notifyDataSetChanged();
     }
 
-    AdapterView.OnItemClickListener remove_when_click = new AdapterView.OnItemClickListener() {
+    AdapterView.OnItemClickListener remove_when_click_roommates = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+            if (position == 0) {
+                Toast.makeText(getApplicationContext(), "Can not remove myself", Toast.LENGTH_LONG).show();
+                return;
+            }
+            _roommates.remove(position);
+            updateListviewRoommates();
+        }
+    };
+    AdapterView.OnItemClickListener remove_when_click_locations = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            _locations.remove(position);
+            updateListviewLocations();
         }
     };
     private void initComponents() {
@@ -62,7 +74,8 @@ public class RoomActivity extends AppCompatActivity {
         _adapterLocations = new AdapterInfomation(this, R.layout.listview_items, _locations);
         _listviewLocations.setAdapter(_adapterLocations);
 
-        _listviewLocations.setOnItemClickListener(remove_when_click);
+        _listviewRoommates.setOnItemClickListener(remove_when_click_roommates);
+        _listviewLocations.setOnItemClickListener(remove_when_click_locations);
         ImageButton btnAddRoommate = (ImageButton) findViewById(R.id.btnAddRoommate);
         btnAddRoommate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +101,14 @@ public class RoomActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(RoomActivity.this, MapsActivity.class);
+                if (_roommates.size() == 0) {
+                    Toast.makeText(getApplicationContext(), "There is no user in this room", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (_locations.size() == 0) {
+                    Toast.makeText(getApplicationContext(), "There is no candidate location", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 intent.putExtra("people",_roommates);
                 intent.putExtra("location", _locations);
                 startActivityForResult(intent, REQUEST_CODE_FIND_BEST_LOCATION);

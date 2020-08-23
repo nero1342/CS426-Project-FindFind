@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,6 +25,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -79,30 +83,30 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void loadData() {
         // Add people
-        mPeople = new ArrayList<>();
-        mPeople.add(new Node("Khoa", new LatLng(10.751088, 106.699583)));
-        mPeople.add(new Node("Ro", new LatLng(10.799199, 106.685738)));
-        mMe = mPeople.get(0);
-
-        // Add places
-        mPlaces = new ArrayList<>();
-        mPlaces.add(new Node("Vietphin Coffee", new LatLng(10.772867, 106.690587)));
-        mPlaces.add(new Node("The Coffee House", new LatLng(10.771223, 106.681081)));
-        mPlaces.add(new Node("Say Coffee", new LatLng(10.772551, 106.669397)));
-
-//        Intent intent = getIntent();
-//        ArrayList<Infomation> _people = (ArrayList) intent.getSerializableExtra("people");
-//        ArrayList<Infomation> _location = (ArrayList) intent.getSerializableExtra("location");
-//
 //        mPeople = new ArrayList<>();
-//        for (Infomation people : _people) {
-//            mPeople.add(new Node(people.getName(), people.getLocationInfo().getLocation().toLatLng()));
-//        }
+//        mPeople.add(new Node("Khoa", new LatLng(10.751088, 106.699583)));
+//        mPeople.add(new Node("Ro", new LatLng(10.799199, 106.685738)));
 //        mMe = mPeople.get(0);
+//
+//        // Add places
 //        mPlaces = new ArrayList<>();
-//        for (Infomation place : _location) {
-//            mPlaces.add(new Node(place.getName(), place.getLocationInfo().getLocation().toLatLng()));
-//        }
+//        mPlaces.add(new Node("Vietphin Coffee", new LatLng(10.772867, 106.690587)));
+//        mPlaces.add(new Node("The Coffee House", new LatLng(10.771223, 106.681081)));
+//        mPlaces.add(new Node("Say Coffee", new LatLng(10.772551, 106.669397)));
+
+        Intent intent = getIntent();
+        ArrayList<Infomation> _people = (ArrayList) intent.getSerializableExtra("people");
+        ArrayList<Infomation> _location = (ArrayList) intent.getSerializableExtra("location");
+
+        mPeople = new ArrayList<>();
+        for (Infomation people : _people) {
+            mPeople.add(new Node(people.getName(), people.getLocationInfo().getLocation().toLatLng()));
+        }
+        mMe = mPeople.get(0);
+        mPlaces = new ArrayList<>();
+        for (Infomation place : _location) {
+            mPlaces.add(new Node(place.getName(), place.getLocationInfo().getLocation().toLatLng()));
+        }
         numTaskRemaining = mPlaces.size();
     }
 
@@ -342,10 +346,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         // Display people
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.marker_people);
+        bmp = Bitmap.createScaledBitmap(bmp, 75, 75, false);
+        BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bmp);
+
         for (Node person : mPeople) {
             Marker marker = mMap.addMarker(new MarkerOptions()
                     .position(person.getLocation())
-                    .title(person.getName()));
+                    .title(person.getName())
+                    .icon(bitmapDescriptor)
+            );
             mMarkers.add(marker);
         }
 
