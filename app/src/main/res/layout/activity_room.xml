@@ -6,66 +6,86 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".RoomActivity">
-
     <LinearLayout
+        android:background="@drawable/border"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:text="LIST ROOMMATE"
-            android:textStyle="bold"
-            android:gravity="bottom"
-            android:autoSizeTextType="uniform"/>
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="5">
+        <LinearLayout
+            android:layout_marginLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:id="@+id/btnAddRoommate"
-            android:drawableLeft="@drawable/add_roommate"
-            android:text="Add"
-            />
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="5"
+                android:layout_height="match_parent"
+                android:text="LIST ROOMMATE"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:textSize="20dp"
+                />
+            <ImageButton
+                android:layout_marginRight="5dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/btnAddRoommate"
+                android:src="@drawable/add_roommate"
+                android:layout_gravity="bottom"
+                />
 
+        </LinearLayout>
+        <ListView
+            android:layout_marginHorizontal="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:id="@+id/listRoommate"
+            />
     </LinearLayout>
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="4"
-        android:id="@+id/listRoommate"
-        />
     <LinearLayout
+        android:background="@drawable/border"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:text="LIST LOCATION"
-            android:textStyle="bold"
-            android:gravity="bottom"
-            android:autoSizeTextType="uniform"/>
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="5">
+        <LinearLayout
+            android:layout_marginLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:id="@+id/btnAddLocation"
-            android:drawableLeft="@drawable/add_location"
-            android:text="Add"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:text="LIST LOCATION"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:textSize="20dp"
+                />
+            <ImageButton
+                android:layout_marginRight="5dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/btnAddLocation"
+                android:src="@drawable/add_location"
+                android:layout_gravity="bottom"
+                />
+        </LinearLayout>
+
+        <ListView
+            android:layout_marginHorizontal="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:id="@+id/listLocation"
             />
-
     </LinearLayout>
-
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="4"
-        android:id="@+id/listLocation"
-        />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -79,14 +99,6 @@
             android:text="Find the best location to meet"
             android:id="@+id/btnFindBestLocation"
             />
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:layout_gravity="center"
-            android:text="Show All"
-            android:id="@+id/btnShowAll"/>
-        />
     </LinearLayout>
 
 </LinearLayout>
