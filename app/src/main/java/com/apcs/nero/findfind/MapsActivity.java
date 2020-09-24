@@ -306,7 +306,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void displayInfo(Node place) {
-        //mPath = place.drawPath(mMap, mPeople, mMe);
         TextView viewBest = (TextView) findViewById(R.id.textView_curDistance);
         viewBest.setText(convertDistance(place.getLength()) + " (" + convertTime(place.getTime()) + ")");
     }
@@ -316,6 +315,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         switch (item.getItemId()) {
             case R.id.menu_star:
                 reDrawPath(mPlaces.get(mMinIndex));
+                moveCamera();
         }
 
         // User didn't trigger a refresh, let the superclass handle this action
@@ -324,7 +324,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void reDrawPath(Node place) {
         for (Polyline line : mPath)
-            //  Redraw the path to the new marker
             line.remove();
         mPath = place.drawPath(mMap, mPeople, mMe);
         displayInfo(place);
