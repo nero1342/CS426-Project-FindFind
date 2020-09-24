@@ -15,9 +15,10 @@
     </LinearLayout>
 
     <GridLayout
+        android:id="@+id/layoutMenu"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8"
+        android:layout_weight="3"
         android:columnCount="3"
         android:rowCount="2">
         <ImageButton
@@ -72,6 +73,58 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"/>
+        android:id="@+id/layoutJoinRoom"
+        android:orientation="vertical"
+        android:layout_weight="6">
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="vertical"
+            android:rowCount="1"
+            android:columnCount="2">
+            <EditText
+                android:layout_columnWeight="2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Room ID: "
+                android:gravity="end"
+                android:editable="false"
+                android:focusableInTouchMode="false"
+                />
+            <EditText
+                android:layout_columnWeight="3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/editTextJoinRoomID"
+                android:inputType="numberDecimal"
+
+                />
+        </GridLayout>
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:rowCount="1"
+            android:columnCount="2">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:id="@+id/btnJoinRoom2"
+                android:text="Join"/>
+            <Button
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:id="@+id/btnCancelJoinRoom"
+                android:text="Cancel"/>
+        </GridLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Temp"
+            android:visibility="invisible"
+            android:id="@+id/txtTemp"/>
+    </LinearLayout>
 
 </LinearLayout>
