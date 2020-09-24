@@ -2,6 +2,9 @@ package com.apcs.nero.findfind;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 
 public class LatLong implements Serializable {
@@ -10,6 +13,15 @@ public class LatLong implements Serializable {
     public LatLong(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    public LatLong(JSONObject jsonObject) {
+        try {
+            this.latitude = jsonObject.getDouble("latitude");
+            this.longitude = jsonObject.getDouble("longitude");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public double getLatitude() {
